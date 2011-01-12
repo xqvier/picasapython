@@ -9,8 +9,8 @@ class Photo:
         # @param nom : le nom de la photo
         # @param chemin : le chemin d'accès sur le disque
         def __init__(self, nom, chemin, titre):
-                self.nom = nom
-                self.titre = titre
+                        self.nom = nom
+                        self.titre = titre
                 self.chemin = chemin
 
         # retourne le nom de la photo   
