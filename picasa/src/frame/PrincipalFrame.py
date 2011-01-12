@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-15 -*-
 '''
 Created on 8 janv. 2011
 
@@ -31,7 +32,7 @@ INDEX = 10003
 IND_P = 1001
 ''' taille de la fenetre d'ajout d'album '''
 ajout_size_x = 500
-ajout_size_y = 300
+ajout_size_y = 200
 ''' taille des miniature '''
 photoX = 144
 photoY = 144
@@ -94,7 +95,7 @@ class MyFrame(wxFrame):
             self.panel.DestroyChildren()
             vbox = wxBoxSizer(wxVERTICAL)
             self.AlbumEnCours = -1;
-            self.SetStatusText("Aucun albums selectionne !!!")
+            self.SetStatusText("Aucun album selectionné!")
             navig_panel = wxPanel(self.panel, 10,(0,10),wxSize(2000,40))
             navig_panel.SetBackgroundColour('#4f5049')
             midPan = wxPanel(self.panel, 10,(35,70),wxSize(fen_size_x,fen_size_y))
@@ -104,7 +105,7 @@ class MyFrame(wxFrame):
             posX = 10
             posY = 10
             size = wxSize(photoX,photoY)
-            wxButton(navig_panel,ID_TLA2,"Tous les albums",(posX/2,posY),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
+            wxButton(navig_panel,ID_TLA2,"Mes albums",(posX/2,posY),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
             EVT_BUTTON(self,ID_TLA2,self.afficheAlbumsE)
             for i in self.MyAlbums.getAlbums():
                 nom = i.getNom()
@@ -142,9 +143,9 @@ class MyFrame(wxFrame):
         self.AlbumEnCours = event.GetId()-INDEX
         album = albums[event.GetId()-INDEX]
         self.SetStatusText("En cours : " + album.getNom())
-        wxButton(navig_panel,ID_TLA2,"Tous les albums >>",(posX/2,posY),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
+        wxButton(navig_panel,ID_TLA2,"Mes albums",(posX/2,posY),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
         EVT_BUTTON(self,ID_TLA2,self.afficheAlbumsE)
-        wxButton(navig_panel,event.GetId(),album.getNom()+" >",(posX/2 +110,posY),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
+        wxButton(navig_panel,event.GetId(),album.getNom(),(posX/2 +110,posY),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
         EVT_BUTTON(self,event.GetId(),self.OnAfficheAlbum)
         st = wxStaticText(navig_panel,-1,album.getUrl(),(230,20),wxSize(600, 30), wxNO_BORDER)
         st.SetForegroundColour("white")
@@ -190,9 +191,9 @@ class MyFrame(wxFrame):
         ''' bouton de navigation '''
         navig_panel = wxPanel(self.panel, 10,(0,10),wxSize(2000,40))
         navig_panel.SetBackgroundColour('#4f5049')
-        wxButton(navig_panel,ID_TLA2,"Tous les albums >>",(10,10),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
+        wxButton(navig_panel,ID_TLA2,"Mes albums",(10,10),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
         EVT_BUTTON(self,event.GetId(),self.afficheAlbumsE)
-        wxButton(navig_panel,i,album.getNom()+" >",(120,10),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
+        wxButton(navig_panel,i,album.getNom(),(120,10),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
         EVT_BUTTON(self,i,self.OnAfficheAlbum)
         st = wxStaticText(navig_panel,p,photo.getNom(),(230,20),wxSize(300, 30), wxNO_BORDER)
         st.SetForegroundColour("white")
@@ -288,34 +289,34 @@ class MyFrame(wxFrame):
             
             ''' La barre de status va nous permettre de definir les albums en cours '''
             self.CreateStatusBar()
-            self.SetStatusText("Aucun albums selectionne !!!")
+            self.SetStatusText("Aucun album selectionné!")
     
             ''' instanciation de la barre de menu '''
             menuBar = wxMenuBar()
     
             ''' defenition du menu fichier '''
             menu = wxMenu()
-            menu.Append(ID_TLA, "&Tous les albums", "Affiche tous les albums")
+            menu.Append(ID_TLA, "Tous les albums", "Affiche tous les albums.")
             menu.AppendSeparator()
-            menu.Append(ID_EXIT, "&Quitter", "Termine ")
-            menuBar.Append(menu, "&Fichier");
+            menu.Append(ID_EXIT, "Quitter", "Termine ")
+            menuBar.Append(menu, "Fichier");
             EVT_MENU(self, ID_EXIT,self.TimeToQuit)
             EVT_MENU(self, ID_TLA,self.afficheAlbumsE)
             
             ''' defenition du menu Edition '''
             menuEdit = wxMenu()
-            menuEdit.Append(ID_AJOUT, "Ajouter un album",
-                        "Permet d'ajouter un albums picassa par son URL.")
+            menuEdit.Append(ID_AJOUT, "Ajouter un album...",
+                        "Permet d'ajouter un album picassa avec une URL.")
             menuEdit.AppendSeparator()
-            menuEdit.Append(ID_SYNC, "Actualiser l'album",
-                        "Permet de rafraichier un albums picassa par son URL.")
-            menuEdit.Append(ID_REN, "Renommer l'album",
-                        "Permet de renommer un albums picassa.")
-            menuEdit.Append(ID_SUP, "Supprimer l'album",
-                        "Permet de supprimer un albums picassa.")
+            menuEdit.Append(ID_SYNC, "Actualiser l'album...",
+                        "Permet de recharger un album picassa.")
+            menuEdit.Append(ID_REN, "Renommer l'album...",
+                        "Permet de renommer un album picassa.")
+            menuEdit.Append(ID_SUP, "Supprimer l'album...",
+                        "Permet de supprimer un album picassa.")
             menuEdit.AppendSeparator()
             menuEdit.Append(ID_REC, "Recherche un album",
-                        "Permet de rechercher un albums picassa.")
+                        "Permet de rechercher un album picassa.")
             menuBar.Append(menuEdit, "&Edition");
             EVT_MENU(self, ID_AJOUT, self.AjoutAlbum)
             EVT_MENU(self, ID_SYNC, self.SyncAlbum)
@@ -325,14 +326,14 @@ class MyFrame(wxFrame):
             
             ''' definition du menu aide '''
             menuAide = wxMenu()
-            menuAide.Append(ID_AIDE, "&Aide                                          F1",
-                        "Affiche une fenetre d'aide du logiciel")
-            menuAide.AppendSeparator()
-            menuAide.Append(ID_ABOUT, "&A propos de "+self.PR_NAME,
-                        "Plus d'information sur le programme")
-            menuBar.Append(menuAide, "&?");
+            #menuAide.Append(ID_AIDE, "Aide",
+            #            "Affiche une fenetre d'aide du logiciel.")
+            #menuAide.AppendSeparator()
+            menuAide.Append(ID_ABOUT, "A propos de "+self.PR_NAME+"...",
+                        "Plus d'informations sur l'application.")
+
+            menuBar.Append(menuAide, "?");
             EVT_MENU(self, ID_ABOUT, self.OnAbout)
-            EVT_MENU(self, ID_AIDE, self.OnAide)
             
             ''' ajout de la barre de menu a la fenetre '''
             self.SetMenuBar(menuBar)   
@@ -345,9 +346,9 @@ class MyFrame(wxFrame):
     def OnAbout(self, event):
             dlg = wxMessageDialog(self,self.PR_NAME+" :\n\n"
                                       "Ce programme permet de telecharger des albums picassa,\n"
-                                      "de les sauvegarder,visualiser et supprimer.\n\n"
-                                      "By : \n\n   Maxime Rodrigues \n    Xavier Mourgues \n    Sylvain Picalre",
-                                      "A Propos", wxOK | wxICON_INFORMATION)
+                                      "de les sauvegarder, les visualiser et les supprimer.\n\n"
+                                      "Auteurs : \n\n   Maxime Rodrigues,\n   Xavier Mourgues,\n   Sylvain Picarle.",
+                                      "A Propos...", wxOK | wxICON_INFORMATION)
             dlg.ShowModal()
             dlg.Destroy()
     
@@ -356,21 +357,21 @@ class MyFrame(wxFrame):
             self.Close(true)
         
 
-    ''' affiche une message de dialogue definissant l'application '''
-    def OnAide(self, event):
-            dlg = wxMessageDialog(self,self.PR_NAME+" fichier d'aide :\n\n"
-                                      "Ce programme permet de telecharger des albums picassa,\n"
-                                      "de les sauvegarder,visualiser et supprimer.\n\n"
-                                      "By : \n\n   Maxime Rodrigues \n    Xavier Mourgues \n    Sylvain Picalre",
-                                      "Aide    F1", wxOK | wxICON_INFORMATION)
-            dlg.ShowModal()
-            dlg.Destroy()
+    #''' affiche une message de dialogue definissant l'application '''
+    #def OnAide(self, event):
+    #        dlg = wxMessageDialog(self,self.PR_NAME+" fichier d'aide :\n\n"
+    #                                  "Ce programme permet de telecharger des albums picassa,\n"
+    #                                  "de les sauvegarder,visualiser et supprimer.\n\n"
+    #                                  "By : \n\n   Maxime Rodrigues \n    Xavier Mourgues \n    Sylvain Picalre",
+    #                                  "Aide    F1", wxOK | wxICON_INFORMATION)
+    #        dlg.ShowModal()
+    #        dlg.Destroy()
 
     ''' permet d'ajouter un album :
             ouvre une fenetre permet de saisir les differents parametre de l'albums
     '''
     def AjoutAlbum(self,event):
-            frame = MyAjoutFrame(self,-2,"Ajout d'un albums",ajout_size_x,ajout_size_y )
+            frame = MyAjoutFrame(self,-2,"Ajout d'un album...",ajout_size_x,ajout_size_y )
             frame.Show(true)
             #self.SetTopWindow(frame)
             
@@ -387,7 +388,14 @@ class MyFrame(wxFrame):
                 self.AlbumEnCours
                 albums = self.MyAlbums.getAlbums()
                 album = albums[self.AlbumEnCours]
-                self.MyAlbums.sync(album.getNom())
+                
+              dlg = wxMessageDialog(self,self.PR_NAME+"\n\n"
+                                          "La synchronisation est un peu longue suivant le nombre d'images.\n\nCliquez sur valider pour lancer la synchronisation",
+                                          "Synchronisation...", wxOK | wxICON_INFORMATION)
+        
+                dlg.ShowModal()
+        self.MyAlbums.sync(album.getNom())
+                dlg.Destroy()
     
     ''' permet de renommer un albums '''
     def RenaAlbum(self,event):
@@ -398,7 +406,7 @@ class MyFrame(wxFrame):
                 albums = self.MyAlbums.getAlbums()
                 album = albums[self.AlbumEnCours]
                 #print "Rename de l'album" , album.getNom()
-                frame = Rename_Frame(self, -1,"Renommer un album",album.getNom(),350,180)
+                frame = Rename_Frame(self, -1,"Renommer un album...",album.getNom(),350,140)
                 frame.Show(True)
         
     ''' permet de supprimer un albums '''
@@ -409,14 +417,14 @@ class MyFrame(wxFrame):
                 albums = self.MyAlbums.getAlbums()
                 album = albums[self.AlbumEnCours]
                 #print "Suppression de l'album",album.getNom()
-                frame = Confirme_Supr_Frame(self, -1,"Confirmation de suppression de l'album",album.getNom(),350,180)
+                frame = Confirme_Supr_Frame(self, -1,"Confirmation de suppression...",album.getNom(),350,180)
                 frame.Show(True)
               
-    ''' affiche une erreur comme quoi il faut selectionner un albums '''
+    ''' affiche une erreur comme quoi il faut selectionner un album '''
     def MsgAucunSelect(self):
-            dlg = wxMessageDialog(self,self.PR_NAME+"Aucun albums n'est selectionner !!!\n\n"
-                                          "Selectionner un albums,\n"
-                                          "Si aucun alnums exist ajouter en un Edition -> Ajouter.\n\n",
+            dlg = wxMessageDialog(self,self.PR_NAME+"Aucun album n'est selectionné!\n\n"
+                                          "Selectionnez un album,\n"
+                                          "Si aucun alnum existe, ajoutez en...\n\n",
                                           "Message d'erreur", wxOK | wxICON_INFORMATION)
             dlg.ShowModal()
             dlg.Destroy()
