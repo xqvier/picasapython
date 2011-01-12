@@ -48,7 +48,7 @@ class Album:
 
                 #traitement pour enlever le caractere parasite qui sert a garder le bon ordre des titres
                 for i in range(0, len(titres)):
-                        titres[i] = titres[i][1:] 
+                        titres[i] = titres[i][1:-1] 
                 
                 # enregistrement des images sur le disque
                 for i in range(0, len(liensImagesMiniatures)):
