@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-15 -*-
 '''
 Created on 8 janv. 2011
 
@@ -41,7 +42,7 @@ class MyAjoutFrame(wxFrame):
         vbox = wxBoxSizer(wxVERTICAL)
 
         hbox1 = wxBoxSizer(wxHORIZONTAL)
-        st1 = wxStaticText(panel, -1, "Nom de l'album")
+        st1 = wxStaticText(panel, -1, "Nom de l'album :")
         st1.SetFont(font)
         hbox1.Add(st1, 0, wxRIGHT, 8)
         self.tc = wxTextCtrl(panel, -1)
@@ -51,7 +52,7 @@ class MyAjoutFrame(wxFrame):
         vbox.Add((-1, 10))
 
         hbox2 = wxBoxSizer(wxHORIZONTAL)
-        st2 = wxStaticText(panel, -1, "Url de l'album")
+        st2 = wxStaticText(panel, -1, "Url de l'album :")
         st2.SetFont(font)
         hbox2.Add(st2, 0)
         vbox.Add(hbox2, 0, wxLEFT | wxTOP, 10)
@@ -67,7 +68,7 @@ class MyAjoutFrame(wxFrame):
         vbox.Add((-1, 25))
 
         hbox5 = wxBoxSizer(wxHORIZONTAL)
-        btn1 = wxButton(panel,Id_VAL, 'Valider', size=(70, 30))
+        btn1 = wxButton(panel,Id_VAL, 'Ajouter', size=(70, 30))
         btn2 = wxButton(panel,Id_ANN, 'Annuler', size=(70, 30))
         hbox5.Add(btn2, 0)
         hbox5.Add(btn1, 0, wxLEFT | wxBOTTOM , 5)
@@ -85,16 +86,16 @@ class MyAjoutFrame(wxFrame):
         name = self.tc.GetValue()
         url = self.tc2.GetValue()
         
-        if len(name) > 3 & len(url)> 28 & url.startswith("http://picasaweb.google.com/") :
+        if (len(name) > 3 & url.startswith("http://picasaweb.google.com/") ):
             try :
                 self.patienterMsg()
                 self.parent.MyAlbums.ajouterAlbum(name,url) 
             except IOError:
                 self.afficheErrorMsg("I/O error({0}): {1}")
             except ValueError:
-                self.afficheErrorMsg("L'album existe deja !!! \n ( soit en temps que nom soit l'url est deja utilise")
+                self.afficheErrorMsg("L'album existe déjà! \n (soit en temps que nom, soit l'url est déjà utilisé")
             except:
-                self.afficheErrorMsg("Une erreur est survenu merci de verifier l'url !!! ")
+                self.afficheErrorMsg("Une erreur est survenu merci de verifier l'url!")
             self.parent.afficheAlbums()
             self.Close(True)  
                
@@ -106,22 +107,22 @@ class MyAjoutFrame(wxFrame):
         self.Close(True)
         
     def patienterMsg(self):    
-            dlg = wxMessageDialog(self,"Merci de patienter durant le chargements des messages !!! \n\n Cette fenetre se fermera a la fin du chargement",
-                                  "Chargement des Images", wxOK | wxICON_INFORMATION)
+            dlg = wxMessageDialog(self,"Merci de patienter durant le chargements des images. \n\n Cette fenêtre se fermera à la fin du chargement",
+                                  "Chargement des images...", wxOK | wxICON_INFORMATION)
             dlg.ShowModal()
             dlg.Destroy()
     def afficheErrorMsg(self,msg):    
             dlg = wxMessageDialog(self,msg,
-                                  "Message d'erreur", wxOK | wxICON_INFORMATION)
+                                  "Message d'erreur...", wxOK | wxICON_INFORMATION)
             dlg.ShowModal()
             dlg.Destroy()
     
         
     def afficheMsgErreur(self):
-            dlg = wxMessageDialog(self," L'url ou le nom de l'albums est invalide :\n\n"
-                                  "- le nom de l'album doit comporter au mois 4 caracteres\n"
-                                  "- l'url de l'album doit contenir http://picasaweb.google.com/ \n"
-                                  "- verifier votre connexion a internet \n\n",
+            dlg = wxMessageDialog(self,"L'url ou le nom de l'album est invalide :\n\n"
+                                  "- Le nom de l'album doit comporter au moins 4 caractères.\n"
+                                  "- L'url de l'album doit contenir http://picasaweb.google.com/.\n"
+                                  "- Verifiez votre connexion a internet \n\n",
                                   "Message d'erreur", wxOK | wxICON_INFORMATION)
             dlg.ShowModal()
             dlg.Destroy()
