@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-15 -*-
 '''
 Created on 9 janv. 2011
 
@@ -39,16 +40,16 @@ class Confirme_Supr_Frame(wxFrame):
         vbox = wxBoxSizer(wxVERTICAL)
 
         hbox1 = wxBoxSizer(wxHORIZONTAL)
-        st1 = wxStaticText(panel, -1, "Etes vous sur de vouloir supprimer l'albums :")
+        st1 = wxStaticText(panel, -1, "Vous allez supprimer l'album suivant:")
         hbox1.Add(st1, 0, wxRIGHT, 8)
         vbox.Add(hbox1, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10)
 
         vbox.Add((-1, 10))
 
         hbox2 = wxBoxSizer(wxHORIZONTAL)
-        st2 = wxStaticText(panel, -1, "              %s " %(self.name))
+        st2 = wxStaticText(panel, -1,self.name)
         hbox2.Add(st2, 0)
-        vbox.Add(hbox2, 0, wxLEFT | wxTOP, 10)
+        vbox.Add(hbox2, 0, wxCENTER | wxTOP, 10)
 
         vbox.Add((-1, 25))
 
@@ -74,9 +75,9 @@ class Confirme_Supr_Frame(wxFrame):
             except IOError:
                 self.afficheErrorMsg("I/O error({0}): {1}")
             except ValueError:
-                self.afficheErrorMsg("L'album n'existe pas !!!")
+                self.afficheErrorMsg("L'album n'existe pas!")
             except:
-                self.afficheErrorMsg("Une erreur est survenu impossible de supprimer l'album !!! ")
+                self.afficheErrorMsg("Une erreur est survenu impossible de supprimer l'album!")
             self.parent.afficheAlbums()
             self.Close(true)  
                
