@@ -96,14 +96,14 @@ class MyAjoutFrame(wxFrame):
             except:
                 self.afficheErrorMsg("Une erreur est survenu merci de verifier l'url !!! ")
             self.parent.afficheAlbums()
-            self.Close(true)  
+            self.Close(True)  
                
         else:
             self.afficheMsgErreur()
     
     
     def OnAnnule(self,event):
-        self.Close(true)
+        self.Close(True)
         
     def patienterMsg(self):    
             dlg = wxMessageDialog(self,"Merci de patienter durant le chargements des messages !!! \n\n Cette fenetre se fermera a la fin du chargement",
