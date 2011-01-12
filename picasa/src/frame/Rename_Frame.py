@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-15 -*-
 '''
 Created on 8 janv. 2011
 
@@ -86,9 +87,9 @@ class Rename_Frame(wxFrame):
             except IOError:
                 self.afficheErrorMsg("I/O error({0}): {1}")
             except ValueError:
-                self.afficheErrorMsg("L'album existe deja !!! \n ( soit en temps que nom soit l'url est deja utilise")
+                self.afficheErrorMsg("L'album existe déjà! \n ( soit en temps que nom, soit l'url est déjà utilisé.")
             except:
-                self.afficheErrorMsg("Une erreur est survenu merci de verifier l'url !!! ")
+                self.afficheErrorMsg("Une erreur est survenu merci de verifier l'url!")
             self.parent.afficheAlbums()
             self.Close(true)  
                
@@ -108,9 +109,9 @@ class Rename_Frame(wxFrame):
     
         
     def afficheMsgErreur(self):
-            dlg = wxMessageDialog(self," Le nom de l'albums est invalide :\n\n"
-                                  "- le nom de l'album doit comporter au mois 4 caracteres  \n"
-                                  "- il est inutile de renommer un album avec le meme nom \n\n",
+            dlg = wxMessageDialog(self,"Le nom de l'albums est invalide :\n\n"
+                                  "- Le nom de l'album doit comporter au moins 4 caractères.\n"
+                                  "- Il est inutile de renommer un album avec le même nom.\n\n",
                                   "Message d'erreur", wxOK | wxICON_INFORMATION)
             dlg.ShowModal()
             dlg.Destroy()
