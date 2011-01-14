@@ -39,7 +39,7 @@ photoY = 144
 cadrephotoX = 144
 cadrephotoY = 170
 fen_size_x = 1065
-fen_size_y = 650
+fen_size_y = 620
     
 class MyFrame(wxFrame):
     '''
@@ -158,13 +158,23 @@ class MyFrame(wxFrame):
             img = a.getChemin()
             imge = wxImage(img,wxBITMAP_TYPE_ANY, -1).ConvertToBitmap()
             id = event.GetId()*100000+index
-            wxBitmapButton(midPan,id, imge,(posX,posY),size, wxNO_BORDER, wxDefaultValidator)
+	    imgPan = wxPanel(midPan, id, (posX,posY),(cadrephotoX,cadrephotoY))
+	    imgPan.SetBackgroundColour('white')
+            wxBitmapButton(imgPan,id, imge,(0,0),size, wxNO_BORDER, wxDefaultValidator)
+	    
+	    titre = a.getTitre()
+	    if len(titre)>17:
+		titre = titre[0:17]+"..."
+	    titre = wxStaticText(imgPan, wxID_ANY,titre, (posX,posY+photoY),wxSize(-1,-1))
             EVT_BUTTON(self,id,self.OnAffichePhoto)
             index += 1
             posX += 150
             if(index%7 == 0):
-                posY += 150
+                posY += cadrephotoY
                 posX = 10
+	    titre.Center()
+            pos = titre.GetPositionTuple()
+	    titre.MoveXY(pos[0], photoY)
         vbox.Add(navig_panel,0,wxALL | wxALL,20)
         vbox.Add(midPan, 1, wxALL | wxALL, 20)
         self.panel.SetSizer(vbox)
@@ -183,15 +193,28 @@ class MyFrame(wxFrame):
         else :
             i = self.AlbumEnCours + INDEX
             p = event.GetId()
-        #print "id de l'album :",i
-        #print "id de la photo :",p
         self.PhotoEnCours = p
         albums = self.MyAlbums.getAlbums()
         album = albums[i-INDEX]
         photos = album.getListeGrandes()
         photo = photos[p-IND_P]
         ch = photo.getChemin()
-        img = wxImage(ch,wxBITMAP_TYPE_ANY, -1).ConvertToBitmap()
+        img = wxImage(ch,wxBITMAP_TYPE_ANY, -1)
+        ''' mise a lechelle de l'image '''
+        width =   img.GetWidth()
+        height =  img.GetHeight()
+	ratioX = float(width)/float(fen_size_x)
+	ratioY = float(height)/float(fen_size_y)
+	if ratioX>ratioY :
+		ratio = float(ratioX)
+	else : 
+		ratio = float(ratioY)
+	newwidth = width/ratio
+	newheight = height/ratio
+        img = img.Scale(newwidth, newheight)
+
+
+	img = img.ConvertToBitmap()
         self.panel.DestroyChildren()
         ''' bouton de navigation '''
         navig_panel = wxPanel(self.panel, 10,(0,10),wxSize(2000,40))
@@ -233,6 +256,12 @@ class MyFrame(wxFrame):
         PosX = ((fen_size_x+75)/2)-(width2/2)
         PosY = 70
         wxStaticBitmap(self.panel, 10,img,(PosX,PosY),wxSize(width2,height2))
+	titre = wxStaticText(self.panel, wxID_ANY,photo.getTitre(), (wxCENTER,fen_size_y + PosY),wxSize(-1,-1))
+	titre.SetFont(wxFont(12,wxSWISS,wxDEFAULT,wxBOLD))
+	titre.Centre()
+	pos = titre.GetPositionTuple()
+	titre.MoveXY(pos[0], fen_size_y + PosY + 10)
+	titre.SetForegroundColour("white")
         self.Centre()
         self.Show(True)  
         
