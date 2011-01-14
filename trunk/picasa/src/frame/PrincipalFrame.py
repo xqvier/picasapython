@@ -36,8 +36,10 @@ ajout_size_y = 200
 ''' taille des miniature '''
 photoX = 144
 photoY = 144
+cadrephotoX = 144
+cadrephotoY = 170
 fen_size_x = 1065
-fen_size_y = 700
+fen_size_y = 650
     
 class MyFrame(wxFrame):
     '''
@@ -91,16 +93,17 @@ class MyFrame(wxFrame):
         
         
     def afficheAlbums(self):
+	    self.cacheMenu(True)
             self.PhotoEnCours = -1
             self.panel.DestroyChildren()
             vbox = wxBoxSizer(wxVERTICAL)
             self.AlbumEnCours = -1;
-            self.SetStatusText("Aucun album selectionné!")
+            self.SetStatusText("Aucun album selectionne!")
             navig_panel = wxPanel(self.panel, 10,(0,10),wxSize(2000,40))
             navig_panel.SetBackgroundColour('#4f5049')
-            midPan = wxPanel(self.panel, 10,(35,70),wxSize(fen_size_x,fen_size_y))
+            midPan = wxScrolledWindow(self.panel, 10,(35,70),wxSize(fen_size_x,fen_size_y))
             midPan.SetBackgroundColour('white')
-            
+	    midPan.SetScrollbars(0, 1, 0, (len(self.MyAlbums.getAlbums()) /6) * cadrephotoY)
             index = INDEX
             posX = 10
             posY = 10
@@ -128,12 +131,13 @@ class MyFrame(wxFrame):
             self.Show(True)  
 
     def OnAfficheAlbum(self,event):
+	self.cacheMenu(False)
         self.PhotoEnCours = -1
         self.panel.DestroyChildren()
         vbox = wxBoxSizer(wxVERTICAL)
         navig_panel = wxPanel(self.panel, 10,(0,10),wxSize(2000,40))
         navig_panel.SetBackgroundColour('#4f5049')
-        midPan = wxPanel(self.panel, 10,(35,70),wxSize(fen_size_x,fen_size_y))
+	midPan = wxScrolledWindow(self.panel, 10,(35,70),wxSize(fen_size_x,fen_size_y))
         midPan.SetBackgroundColour('white')
         index = IND_P
         posX = 10
@@ -142,6 +146,7 @@ class MyFrame(wxFrame):
         albums = self.MyAlbums.getAlbums()
         self.AlbumEnCours = event.GetId()-INDEX
         album = albums[event.GetId()-INDEX]
+	midPan.SetScrollbars(0, 1, 0, (len(album.getListeMiniatures()) /6) * cadrephotoY)
         self.SetStatusText("En cours : " + album.getNom())
         wxButton(navig_panel,ID_TLA2,"Mes albums",(posX/2,posY),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
         EVT_BUTTON(self,ID_TLA2,self.afficheAlbumsE)
@@ -160,7 +165,6 @@ class MyFrame(wxFrame):
             if(index%7 == 0):
                 posY += 150
                 posX = 10
-        wxScrollBar(midPan,5,(fen_size_x-15,0),wxSize(15,fen_size_y),wxNO_BORDER,wxDefaultValidator,"scroll")
         vbox.Add(navig_panel,0,wxALL | wxALL,20)
         vbox.Add(midPan, 1, wxALL | wxALL, 20)
         self.panel.SetSizer(vbox)
@@ -168,6 +172,7 @@ class MyFrame(wxFrame):
         self.Show(True)  
         
     def OnAffichePhoto(self,event):
+	self.cacheMenu(False)
         ''' albums id '''
         if(event.GetId()>99999):
             i =  event.GetId()/100000
@@ -289,7 +294,7 @@ class MyFrame(wxFrame):
             
             ''' La barre de status va nous permettre de definir les albums en cours '''
             self.CreateStatusBar()
-            self.SetStatusText("Aucun album selectionné!")
+            self.SetStatusText("Aucun album selectionne!")
     
             ''' instanciation de la barre de menu '''
             menuBar = wxMenuBar()
@@ -304,20 +309,20 @@ class MyFrame(wxFrame):
             EVT_MENU(self, ID_TLA,self.afficheAlbumsE)
             
             ''' defenition du menu Edition '''
-            menuEdit = wxMenu()
-            menuEdit.Append(ID_AJOUT, "Ajouter un album...",
+            self.menuEdit = wxMenu()
+            self.menuEdit.Append(ID_AJOUT, "Ajouter un album...",
                         "Permet d'ajouter un album picassa avec une URL.")
-            menuEdit.AppendSeparator()
-            menuEdit.Append(ID_SYNC, "Actualiser l'album...",
+            self.menuEdit.AppendSeparator()
+            self.menuEdit.Append(ID_SYNC, "Actualiser l'album...",
                         "Permet de recharger un album picassa.")
-            menuEdit.Append(ID_REN, "Renommer l'album...",
+            self.menuEdit.Append(ID_REN, "Renommer l'album...",
                         "Permet de renommer un album picassa.")
-            menuEdit.Append(ID_SUP, "Supprimer l'album...",
+            self.menuEdit.Append(ID_SUP, "Supprimer l'album...",
                         "Permet de supprimer un album picassa.")
-            menuEdit.AppendSeparator()
-            menuEdit.Append(ID_REC, "Recherche un album",
+            self.menuEdit.AppendSeparator()
+            self.menuEdit.Append(ID_REC, "Recherche un album",
                         "Permet de rechercher un album picassa.")
-            menuBar.Append(menuEdit, "&Edition");
+            menuBar.Append(self.menuEdit, "&Edition");
             EVT_MENU(self, ID_AJOUT, self.AjoutAlbum)
             EVT_MENU(self, ID_SYNC, self.SyncAlbum)
             EVT_MENU(self, ID_REN, self.RenaAlbum)
@@ -336,7 +341,18 @@ class MyFrame(wxFrame):
             EVT_MENU(self, ID_ABOUT, self.OnAbout)
             
             ''' ajout de la barre de menu a la fenetre '''
-            self.SetMenuBar(menuBar)   
+            self.SetMenuBar(menuBar)  
+
+    ''' Grise ou non les menu (actualiser, renommer et supprimer) suivant le booleen flag''' 
+    def cacheMenu(self, flag):
+	    if flag:
+		flag = False
+            else:
+		flag = True
+
+	    self.menuEdit.GetMenuItems()[2].Enable(flag)
+	    self.menuEdit.GetMenuItems()[3].Enable(flag)
+	    self.menuEdit.GetMenuItems()[4].Enable(flag)
                      
     ''' fonction apppele par evenement pour afficher tous les albums '''
     def afficheAlbumsE(self,event):
@@ -389,12 +405,12 @@ class MyFrame(wxFrame):
                 albums = self.MyAlbums.getAlbums()
                 album = albums[self.AlbumEnCours]
                 
-              dlg = wxMessageDialog(self,self.PR_NAME+"\n\n"
+                dlg = wxMessageDialog(self,self.PR_NAME+"\n\n"
                                           "La synchronisation est un peu longue suivant le nombre d'images.\n\nCliquez sur valider pour lancer la synchronisation",
                                           "Synchronisation...", wxOK | wxICON_INFORMATION)
         
                 dlg.ShowModal()
-        self.MyAlbums.sync(album.getNom())
+        	self.MyAlbums.sync(album.getNom())
                 dlg.Destroy()
     
     ''' permet de renommer un albums '''
@@ -422,7 +438,7 @@ class MyFrame(wxFrame):
               
     ''' affiche une erreur comme quoi il faut selectionner un album '''
     def MsgAucunSelect(self):
-            dlg = wxMessageDialog(self,self.PR_NAME+"Aucun album n'est selectionné!\n\n"
+            dlg = wxMessageDialog(self,self.PR_NAME+"Aucun album n'est selectionne!\n\n"
                                           "Selectionnez un album,\n"
                                           "Si aucun alnum existe, ajoutez en...\n\n",
                                           "Message d'erreur", wxOK | wxICON_INFORMATION)

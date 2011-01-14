@@ -11,7 +11,7 @@ class Photo:
         def __init__(self, nom, chemin, titre):
                         self.nom = nom
                         self.titre = titre
-                self.chemin = chemin
+                	self.chemin = chemin
 
         # retourne le nom de la photo   
         # @return le nom de la photo

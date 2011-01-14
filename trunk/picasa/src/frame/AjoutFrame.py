@@ -93,11 +93,11 @@ class MyAjoutFrame(wxFrame):
             except IOError:
                 self.afficheErrorMsg("I/O error({0}): {1}")
             except ValueError:
-                self.afficheErrorMsg("L'album existe déjà! \n (soit en temps que nom, soit l'url est déjà utilisé")
+                self.afficheErrorMsg("L'album existe deja! \n (soit en temps que nom, soit l'url est deja utilise")
             except:
                 self.afficheErrorMsg("Une erreur est survenu merci de verifier l'url!")
             self.parent.afficheAlbums()
-            self.Close(True)  
+	    self.Close(True)  
                
         else:
             self.afficheMsgErreur()
@@ -107,7 +107,7 @@ class MyAjoutFrame(wxFrame):
         self.Close(True)
         
     def patienterMsg(self):    
-            dlg = wxMessageDialog(self,"Merci de patienter durant le chargements des images. \n\n Cette fenêtre se fermera à la fin du chargement",
+            dlg = wxMessageDialog(self,"Merci de patienter durant le chargements des images. \n\n Cette fenetre se fermera a la fin du chargement",
                                   "Chargement des images...", wxOK | wxICON_INFORMATION)
             dlg.ShowModal()
             dlg.Destroy()
