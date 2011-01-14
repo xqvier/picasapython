@@ -36,7 +36,7 @@ class Albums:
                 # on vérifie que l'album n'est pas déjà présent soit par le nom soit par l'url
                 i = 0
                 while((i < len(self.albums)) and self.albums[i].getNom().lower() != nom.lower() and self.albums[i].getUrl().lower() != url.lower()):
-                        i += 1
+                     	i += 1
                                    
                 if(i != len(self.albums)):
                     raise ValueError("Album déjà présent")
