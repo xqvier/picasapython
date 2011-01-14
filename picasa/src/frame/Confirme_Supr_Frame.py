@@ -24,7 +24,7 @@ class Confirme_Supr_Frame(wxFrame):
     '''
     name = ""
 
-    def __init__(self, parent, ID, title,name,sizeX,sizeY):
+    def __init__(self, parent, ID, title,album,sizeX,sizeY):
         '''
         Constructor
         '''
@@ -32,7 +32,7 @@ class Confirme_Supr_Frame(wxFrame):
                              wxDefaultPosition, wxSize(sizeX,sizeY))
         self.parent = parent
         self.SetBackgroundColour("white")
-        self.name = name
+        self.name = album.getNom()
         ''' definition d'un panel pour mettre en place les champs et boutton '''
         panel = wxPanel(self, -1)
 
@@ -41,15 +41,23 @@ class Confirme_Supr_Frame(wxFrame):
 
         hbox1 = wxBoxSizer(wxHORIZONTAL)
         st1 = wxStaticText(panel, -1, "Vous allez supprimer l'album suivant:")
-        hbox1.Add(st1, 0, wxRIGHT, 8)
+	img = wxImage(album.getListeMiniatures()[0].getChemin()).ConvertToBitmap()
+	img = wxStaticBitmap(panel, -1, img)
+	st1.Center()
+	img.Center()
+	
+        hbox1.Add(st1, 0)#, wxRIGHT, 8)
         vbox.Add(hbox1, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10)
 
         vbox.Add((-1, 10))
 
         hbox2 = wxBoxSizer(wxHORIZONTAL)
         st2 = wxStaticText(panel, -1,self.name)
-        hbox2.Add(st2, 0)
-        vbox.Add(hbox2, 0, wxCENTER | wxTOP, 10)
+	hbox2.Add((50,1))
+	hbox2.Add(img,0)
+	hbox2.Add((30,1))
+        hbox2.Add(st2, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL)
+        vbox.Add(hbox2, 0, wxLEFT | wxTOP, 10)
 
         vbox.Add((-1, 25))
 
