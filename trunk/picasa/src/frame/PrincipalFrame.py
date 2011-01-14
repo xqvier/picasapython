@@ -462,7 +462,7 @@ class MyFrame(wxFrame):
                 albums = self.MyAlbums.getAlbums()
                 album = albums[self.AlbumEnCours]
                 #print "Suppression de l'album",album.getNom()
-                frame = Confirme_Supr_Frame(self, -1,"Confirmation de suppression...",album.getNom(),350,180)
+                frame = Confirme_Supr_Frame(self, -1,"Confirmation de suppression...",album,350,250)
                 frame.Show(True)
               
     ''' affiche une erreur comme quoi il faut selectionner un album '''
