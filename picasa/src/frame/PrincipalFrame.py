@@ -18,18 +18,18 @@ from Confirme_Supr_Frame import Confirme_Supr_Frame
 from Rename_Frame import Rename_Frame
 
 ''' definition des constantes des bouton du menu '''
-ID_AIDE = 100
-ID_ABOUT = 101
-ID_EXIT  = 102
-ID_AJOUT = 103
-ID_SUP = 104
-ID_REN = 105
-ID_SYNC = 106
-ID_REC = 107
-ID_TLA = 108
-ID_TLA2 = 109
-INDEX = 10003
-IND_P = 1001
+ID_AIDE = 0
+ID_ABOUT = 1
+ID_EXIT  = 2
+ID_AJOUT = 3
+ID_SUP = 4
+ID_REN = 5
+ID_SYNC = 6
+ID_REC = 7
+ID_TLA = 8
+ID_TLA2 = 9
+INDEX = 14
+IND_P = 105
 ''' taille de la fenetre d'ajout d'album '''
 ajout_size_x = 500
 ajout_size_y = 200
@@ -157,7 +157,7 @@ class MyFrame(wxFrame):
         for a in album.getListeMiniatures():
             img = a.getChemin()
             imge = wxImage(img,wxBITMAP_TYPE_ANY, -1).ConvertToBitmap()
-            id = event.GetId()*100000+index
+            id = event.GetId()+index*100
 	    imgPan = wxPanel(midPan, id, (posX,posY),(cadrephotoX,cadrephotoY))
 	    imgPan.SetBackgroundColour('white')
             wxBitmapButton(imgPan,id, imge,(0,0),size, wxNO_BORDER, wxDefaultValidator)
@@ -183,16 +183,16 @@ class MyFrame(wxFrame):
         
     def OnAffichePhoto(self,event):
 	self.cacheMenu(False)
-        ''' albums id '''
-        if(event.GetId()>99999):
-            i =  event.GetId()/100000
-            self.AlbumEnCours = i-INDEX
-            ''' photo id '''
-            p =  event.GetId() - i*100000
+        ''' photo id '''
+        if(event.GetId()>99):
+            p =  event.GetId()/100         
+            ''' albums id '''
+            i =  event.GetId() - p*100
+            self.AlbumEnCours = i-INDEX   
             vbox = wxBoxSizer(wxVERTICAL)
         else :
             i = self.AlbumEnCours + INDEX
-            p = event.GetId()
+            p = event.GetId() 
         self.PhotoEnCours = p
         albums = self.MyAlbums.getAlbums()
         album = albums[i-INDEX]
@@ -229,11 +229,11 @@ class MyFrame(wxFrame):
         st = wxStaticText(navig_panel,-1,text,(740,20),wxSize(100, 30), wxNO_BORDER)
         st.SetForegroundColour("white")
         if(len(album.getListeGrandes()) > (p-IND_P+1)):
-            wxButton(navig_panel,(p+1),"Suivante >",(850,10),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
-            EVT_BUTTON(self,(p+1),self.OnAffichePhoto)
+            wxButton(navig_panel,(i+(p+1)*100),"Suivante >",(850,10),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
+            EVT_BUTTON(self,(i+(p+1)*100),self.OnAffichePhoto)
         if(p-IND_P >= 1):
-            wxButton(navig_panel,(p-1),"< Precedente",(550,10),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
-            EVT_BUTTON(self,(p-1),self.OnAffichePhoto)
+            wxButton(navig_panel,(i+(p-1)*100),"< Precedente",(550,10),wxSize(100, 30))#, wxNO_BORDER, wxDefaultValidator)
+            EVT_BUTTON(self,(i+(p-1)*100),self.OnAffichePhoto)
         ''' mise a lechelle de l'image '''
         width =   img.GetWidth()
         height =  img.GetHeight()
@@ -256,12 +256,15 @@ class MyFrame(wxFrame):
         PosX = ((fen_size_x+75)/2)-(width2/2)
         PosY = 70
         wxStaticBitmap(self.panel, 10,img,(PosX,PosY),wxSize(width2,height2))
-	titre = wxStaticText(self.panel, wxID_ANY,photo.getTitre(), (wxCENTER,fen_size_y + PosY),wxSize(-1,-1))
-	titre.SetFont(wxFont(12,wxSWISS,wxDEFAULT,wxBOLD))
-	titre.Centre()
-	pos = titre.GetPositionTuple()
-	titre.MoveXY(pos[0], fen_size_y + PosY + 10)
-	titre.SetForegroundColour("white")
+    	titre = wxStaticText(self.panel, wxID_ANY,photo.getTitre(), (wxCENTER,fen_size_y + PosY),wxSize(-1,-1))
+    	#titre.SetFont(wxFont(12,wxSWISS,wxDEFAULT,wxBOLD))
+        font = wxSystemSettings_GetFont(wxSYS_SYSTEM_FONT)
+        font.SetPointSize(12)
+        titre.SetFont(font)
+    	titre.Centre()
+    	pos = titre.GetPositionTuple()
+    	titre.MoveXY(pos[0], fen_size_y + PosY + 10)
+    	titre.SetForegroundColour("white")
         self.Centre()
         self.Show(True)  
         
@@ -451,7 +454,7 @@ class MyFrame(wxFrame):
                 albums = self.MyAlbums.getAlbums()
                 album = albums[self.AlbumEnCours]
                 #print "Rename de l'album" , album.getNom()
-                frame = Rename_Frame(self, -1,"Renommer un album...",album.getNom(),350,140)
+                frame = Rename_Frame(self, -1,"Renommer un album...",album.getNom(),350,180)
                 frame.Show(True)
         
     ''' permet de supprimer un albums '''
