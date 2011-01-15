@@ -16,6 +16,8 @@ from wx._core import KeyEvent
 from AjoutFrame import MyAjoutFrame
 from Confirme_Supr_Frame import Confirme_Supr_Frame
 from Rename_Frame import Rename_Frame
+from ExporterAlbum_Frame import ExporterAlbum_Frame
+from ExporterTous_Frame import ExporterTous_Frame
 
 ''' definition des constantes des bouton du menu '''
 ID_AIDE = 0
@@ -28,6 +30,8 @@ ID_SYNC = 6
 ID_REC = 7
 ID_TLA = 8
 ID_TLA2 = 9
+ID_EXPT = 10
+ID_EXPA = 11
 INDEX = 14
 IND_P = 105
 ''' taille de la fenetre d'ajout d'album '''
@@ -334,11 +338,13 @@ class MyFrame(wxFrame):
             ''' defenition du menu fichier '''
             menu = wxMenu()
             menu.Append(ID_TLA, "Tous les albums", "Affiche tous les albums.")
+            menu.Append(ID_EXPT, "Exporter tous les albums", "Permet l'exportation de tous les albums.")
             menu.AppendSeparator()
             menu.Append(ID_EXIT, "Quitter", "Termine ")
             menuBar.Append(menu, "Fichier");
             EVT_MENU(self, ID_EXIT,self.TimeToQuit)
             EVT_MENU(self, ID_TLA,self.afficheAlbumsE)
+            EVT_MENU(self, ID_EXPT,self.AfficheFenExportTous)
             
             ''' defenition du menu Edition '''
             self.menuEdit = wxMenu()
@@ -347,6 +353,8 @@ class MyFrame(wxFrame):
             self.menuEdit.AppendSeparator()
             self.menuEdit.Append(ID_SYNC, "Actualiser l'album...",
                         "Permet de recharger un album picassa.")
+            self.menuEdit.Append(ID_EXPA, "Exporter l'album...",
+                        "Permet d'exporter l'albums en cours")
             self.menuEdit.Append(ID_REN, "Renommer l'album...",
                         "Permet de renommer un album picassa.")
             self.menuEdit.Append(ID_SUP, "Supprimer l'album...",
@@ -358,6 +366,7 @@ class MyFrame(wxFrame):
             EVT_MENU(self, ID_AJOUT, self.AjoutAlbum)
             EVT_MENU(self, ID_SYNC, self.SyncAlbum)
             EVT_MENU(self, ID_REN, self.RenaAlbum)
+            EVT_MENU(self, ID_EXPA, self.ExportAlbumEnCour)
             EVT_MENU(self, ID_SUP, self.SuprAlbum)
             EVT_MENU(self, ID_REC, self.RechAlbum)
             
@@ -377,14 +386,12 @@ class MyFrame(wxFrame):
 
     ''' Grise ou non les menu (actualiser, renommer et supprimer) suivant le booleen flag''' 
     def cacheMenu(self, flag):
-	    if flag:
-		flag = False
-            else:
-		flag = True
-
-	    self.menuEdit.GetMenuItems()[2].Enable(flag)
-	    self.menuEdit.GetMenuItems()[3].Enable(flag)
-	    self.menuEdit.GetMenuItems()[4].Enable(flag)
+    	    flag = not flag            
+            self.menuEdit.GetMenuItems()[5].Enable(flag)
+    	    self.menuEdit.GetMenuItems()[2].Enable(flag)
+    	    self.menuEdit.GetMenuItems()[3].Enable(flag)
+    	    self.menuEdit.GetMenuItems()[4].Enable(flag)
+            
                      
     ''' fonction apppele par evenement pour afficher tous les albums '''
     def afficheAlbumsE(self,event):
@@ -477,6 +484,20 @@ class MyFrame(wxFrame):
             dlg.ShowModal()
             dlg.Destroy()
     
+    def AfficheFenExportTous(self,event):
+            frame = ExporterTous_Frame(self, -1,"Exporter tous les albums...",self.MyAlbums,350,240)
+            frame.Show(True)
+        
+    def ExportAlbumEnCour(self,event):
+        if self.AlbumEnCours == -1:
+            self.MsgAucunSelect()
+        else:
+            self.AlbumEnCours
+            albums = self.MyAlbums.getAlbums()
+            album = albums[self.AlbumEnCours]
+            #print "Rename de l'album" , album.getNom()
+            frame = ExporterAlbum_Frame(self, -1,"Exporter un album...",album,350,240)
+            frame.Show(True)
     
     ''' ------------------------------------------------------------------------------------------------
     ******************** FIN  Initialisation de la barre de menu ***************************************
