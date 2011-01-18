@@ -4,10 +4,12 @@ import sys
 sys.path.append('./class')
 
 from Albums import Albums
+from Export import Export
+from Album import Album
 
 
 #Verification de la syntaxe de la ligne de commande
-if len(sys.argv) < 3 or ((sys.argv[1].lower() == "import" or sys.argv[1].lower() == "rename") and len(sys.argv) < 4):
+if len(sys.argv) < 3 or ((sys.argv[1].lower() == "import" or sys.argv[1].lower() == "rename" or sys.argv[1].lower() == "export") and len(sys.argv) < 4):
     print "Erreure de syntaxe"
     print "Usage : %s action albumName [url|newName]" % (sys.argv[0])
     print "action :" 
@@ -15,6 +17,7 @@ if len(sys.argv) < 3 or ((sys.argv[1].lower() == "import" or sys.argv[1].lower()
     print "\tdel - Efface l'album dont le nom est specifie par albumName"
     print "\trename - Renomme le repertoire dont le nom courant est albumName et le nouveau nom est newName"
     print "\tsync - Synchronise l'album identifie par albumName pour mettre a jour les nouvelles photo et supprimer les photos qui n'existe plus d'un album deja importe"
+    print "\texport - Exporte l'album identifie par albumName (mot cle 'all' pour tous les albums) et l'envoie a l'url spécifie"
     print "albumName : Le nom de l'album concerne"
     print "url : l'url d'importation de l'album"
     print "newName : Le nouveau nom de l'album dans le cadre d'un renommage"
@@ -59,6 +62,24 @@ if(action == "sync"):
     except ValueError:
         print "Cet album n'existe pas"
 
+if(action == "export"):
+    url = sys.argv[3]
+    export = Export()
+    if(albumName == "all"):
+        export.indexAlbums(albums,"Picasa Albums")
+        try:
+            export.cprep("./data/mesAlbums/", url)
+        except ValueError:
+            print "L'url de destination est invalide"
+    else:
+        for x in albums.getAlbums():
+            if(x.getNom() == albumName):
+                export.indexAlbum(x,albumName, false)
+                try: 
+                    export.cprep("./data/mesAlbums/"+albumName, url)
+                except ValueError:
+                    print "L'url de destination est invalide"
+    
 
 
 sys.exit(0);        
