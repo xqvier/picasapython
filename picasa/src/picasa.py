@@ -17,7 +17,7 @@ if len(sys.argv) < 3 or ((sys.argv[1].lower() == "import" or sys.argv[1].lower()
     print "\tdel - Efface l'album dont le nom est specifie par albumName"
     print "\trename - Renomme le repertoire dont le nom courant est albumName et le nouveau nom est newName"
     print "\tsync - Synchronise l'album identifie par albumName pour mettre a jour les nouvelles photo et supprimer les photos qui n'existe plus d'un album deja importe"
-    print "\texport - Exporte l'album identifie par albumName (mot cle 'all' pour tous les albums) et l'envoie a l'url spécifie"
+    print "\texport - Exporte l'album identifie par albumName (mot cle 'all' pour tous les albums) et l'envoie a l'url specifie"
     print "albumName : Le nom de l'album concerne"
     print "url : l'url d'importation de l'album"
     print "newName : Le nouveau nom de l'album dans le cadre d'un renommage"
@@ -72,14 +72,19 @@ if(action == "export"):
         except ValueError:
             print "L'url de destination est invalide"
     else:
+        flag = False
         for x in albums.getAlbums():
-            if(x.getNom() == albumName):
-                export.indexAlbum(x,albumName, false)
+            if(x.getNom().lower() == albumName.lower()):
+                export.indexAlbum(x,albumName, False)
                 try: 
                     export.cprep("./data/mesAlbums/"+albumName, url)
                 except ValueError:
                     print "L'url de destination est invalide"
-    
+                flag = True
+                break
+        if(not flag):
+            print "Le nom d'album est incorrecte"
+        
 
 
 sys.exit(0);        
